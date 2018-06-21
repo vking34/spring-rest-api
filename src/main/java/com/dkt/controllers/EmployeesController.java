@@ -3,6 +3,7 @@ package com.dkt.controllers;
 
 import com.dkt.models.Employee;
 import com.dkt.models.Employees;
+import com.dkt.repositories.EmployeeRepository;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.config.EnableHypermediaSupport;
 import org.springframework.hateoas.config.EnableHypermediaSupport.HypermediaType;
@@ -24,14 +25,21 @@ public class EmployeesController {
 
     Employees list = Employees.getInstance();
 
-//    @GetMapping
+    private EmployeeRepository employeeRepository;
+
+    public EmployeesController(EmployeeRepository employeeRepository) {
+        this.employeeRepository = employeeRepository;
+    }
+    //    @GetMapping
 //    public List<Employee> getEmployeesList(){
 //        return list.getList();
 //    }
 
     @GetMapping(produces = {"application/hal+json"})
     public Resources<Employee> getEmployeeList(){
-        List<Employee> employeeList = list.getList();
+//        List<Employee> employeeList = list.getList();
+        List<Employee> employeeList = employeeRepository.findAll();
+
         for(Employee e : employeeList){
             if(!e.hasLinks())
             {
@@ -50,7 +58,13 @@ public class EmployeesController {
         String name = employee.get("name");
         int age = Integer.parseInt(employee.get("age"));
         int salary = Integer.parseInt(employee.get("salary"));
-        return list.addEmployee(id, name, age, salary);
+//        return list.addEmployee(id, name, age, salary);
+        try{
+            employeeRepository.insert(new Employee(id, name, age, salary));
+            return true;
+        }catch (Exception e){
+            return false;
+        }
     }
 
     @PutMapping
@@ -74,7 +88,8 @@ public class EmployeesController {
 
     @GetMapping(value = "/{id}", produces = {"application/hal+json"})
     public Resource<Employee> getEmployee(@PathVariable int id){
-        Employee employee = list.getEmployeeById(id);
+//        Employee employee = list.getEmployeeById(id);
+        Employee employee = employeeRepository.findByEmployeeID(id);
 
         Link selfLink = employee.getLink("self");
         if(selfLink == null){
