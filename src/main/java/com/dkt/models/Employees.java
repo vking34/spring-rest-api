@@ -28,7 +28,7 @@ public class Employees {
         return list;
     }
 
-    // get employee by id
+    // get Employee by id
     public Employee getEmployeeById(int id){
         for(Employee e : list){
             if(e.getEmployeeID() == id){
@@ -38,7 +38,7 @@ public class Employees {
         return null;
     }
 
-    // add employee
+    // add Employee
     public boolean addEmployee(int id, String name, int age, int salary){
         for(Employee e : list)
         {
@@ -52,7 +52,7 @@ public class Employees {
         return true;
     }
 
-    // update employee
+    // update Employee
     public boolean updateEmployee(int id, String name, int age, int salary)
     {
         for(int i = 0; i < list.size(); i++){
@@ -66,7 +66,7 @@ public class Employees {
         return false;
     }
 
-    // delete employee by id
+    // delete Employee by id
     public boolean deleteEmployeeById(int id)
     {
         for(int i = 0; i < list.size(); i++){

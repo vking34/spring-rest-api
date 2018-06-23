@@ -1,11 +1,16 @@
 package com.dkt.models;
 
+import com.dkt.passingObjects.resp;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.hateoas.ResourceSupport;
 
-@Document(collection = "employee")
+import java.util.ArrayList;
+import java.util.List;
+
+@Document(collection = "Employee")
 
 public class Employee extends ResourceSupport {
 
@@ -13,7 +18,7 @@ public class Employee extends ResourceSupport {
     private String _id;
 
     @Field("id")
-
+//    @Indexed(unique = true)
     private int employeeID;
 
     @Field("name")
@@ -25,13 +30,35 @@ public class Employee extends ResourceSupport {
     @Field("salary")
     private int salary;
 
+    @Field("departments")
+    List<String> departments;
+
     public Employee(){}
+
+    public Employee(String _id, int employeeID, String name, int age, int salary) {
+        this._id = _id;
+        this.employeeID = employeeID;
+        this.name = name;
+        this.age = age;
+        this.salary = salary;
+        departments = new ArrayList<String>();
+    }
 
     public Employee(int employeeID, String name, int age, int salary) {
         this.employeeID = employeeID;
         this.name = name;
         this.age = age;
         this.salary = salary;
+        departments = new ArrayList<String>();
+    }
+
+    public Employee(String _id, int employeeID, String name, int age, int salary, List<String> departments) {
+        this._id = _id;
+        this.employeeID = employeeID;
+        this.name = name;
+        this.age = age;
+        this.salary = salary;
+        this.departments = departments;
     }
 
     public String get_id() {
@@ -73,4 +100,34 @@ public class Employee extends ResourceSupport {
     public void setSalary(int salary) {
         this.salary = salary;
     }
+
+    public List<String> getDepartments() {
+        return departments;
+    }
+
+    public void setDepartments(List<String> departments) {
+        this.departments = departments;
+    }
+
+    public boolean addDepartment(String newID){
+        for(String id : departments){
+            if(id.equals(newID))
+            {
+                return false;
+            }
+        }
+        departments.add(newID);
+        return true;
+    }
+
+    public boolean removeDepartmentById(String id){
+        for(int i = 0; i < departments.size(); i++){
+            if(departments.get(i).equals(id)){
+                departments.remove(i);
+                return true;
+            }
+        }
+        return false;
+    }
+
 }
